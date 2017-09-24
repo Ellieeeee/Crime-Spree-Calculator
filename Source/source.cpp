@@ -41,7 +41,7 @@ int main()
 	//weapon damage
 	//R870
 	const float TAN_870_DAMAGE = 75;
-	
+
 	//M4
 	const float TAN_M4_DAMAGE = 15;
 
@@ -66,7 +66,7 @@ int main()
 
 	//variables for each unit and their respective health/breakpoints
 	float currentTanHealth, currentTanBreakpoint, currentTaserHealth, currentTaserBreakpoint, currentShieldHealth, currentShieldBreakpoint, currentPhalanxHealth, currentPhalanxBreakpoint, currentBulldozerHealth, currentBulldozerBreakpoint;
-	
+
 	//variables for weapon damage
 	float currentShotgunDamage, currentRifleDamage, currentSaigaDamage, currentLMGDamage, currentMiniDamage, currentSniperDamage;
 
@@ -174,7 +174,7 @@ int main()
 		cout << "\n\n";
 
 		//we're done, close the program
-		cout << "Press Enter to check another level, or N to exit.\n";
+		cout << "Enter N to exit, or any other letter to check another level.\n";
 		cin >> yesOrNo;
 
 		//if user wants to continue
