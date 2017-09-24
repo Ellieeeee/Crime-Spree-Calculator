@@ -11,6 +11,9 @@ int main()
 	const float DAMAGE_BOOST_MODIFIER = 0.15;
 	const float HEALTH_BOOST_MODIFIER = 0.20;
 
+	//interval that forced modifiers are applied
+	const int FORCED_MODIFIER_INTERVAL = 50;
+
 	//health and headshot multipliers
 	//tan
 	const float TAN_HEALTH = 480;
@@ -67,93 +70,122 @@ int main()
 	//variables for weapon damage
 	float currentShotgunDamage, currentRifleDamage, currentSaigaDamage, currentLMGDamage, currentMiniDamage, currentSniperDamage;
 
-	//prompt user for cs level
-	cout << "\nEnter the current crime spree level.\n";
-	cin >> crimeSpreeLevel;
+	//bool that controls if the program does more than one iteration
+	bool continueProgram = true;
 
-	//buffer so the program doesn't instantly close from hitting enter
-	cin.ignore();
+	//char used to deterine if continueProgram stays true or is made false
+	char yesOrNo;
 
-	//calculate how many forced modifiers there are. ALWAYS round down by truncation, we don't want partials here (since no partials of this exist in game)
-	numberOfForcedModifiers = crimeSpreeLevel / 50;
+	//beginning of a while loop that will let the user repeat the program as much as they want
+	while (continueProgram == true)
+	{
+		//prompt user for cs level
+		cout << "\nEnter the current crime spree level.\n";
+		cin >> crimeSpreeLevel;
 
-	//calculate the numbers we're going to use for multiplication
-	healthBoost = 1 + (numberOfForcedModifiers * HEALTH_BOOST_MODIFIER);
-	damageBoost = 1 + (numberOfForcedModifiers * DAMAGE_BOOST_MODIFIER);
+		//input verification to make sure the user isn't putting in negative numbers
+		//TODO: find a way to check also if the integer has gone over 2147483647 since overflow
+		while (crimeSpreeLevel < 0)
+		{
+			cin.ignore();
+			cout << "\nInvalid input, please try again.\n";
+			cin >> crimeSpreeLevel;
 
-	//calculate current health values
-	//tan
-	currentTanHealth = (TAN_HEALTH * healthBoost);
-	currentTanBreakpoint = (currentTanHealth / TAN_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
+		}
 
-	//taser
-	currentTaserHealth = (TASER_HEALTH * healthBoost);
-	currentTaserBreakpoint = (currentTaserHealth / TASER_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
+		//buffer so the program doesn't instantly close from hitting enter
+		cin.ignore();
 
-	//shield
-	currentShieldHealth = (SHIELD_HEALTH * healthBoost);
-	currentShieldBreakpoint = (currentShieldHealth / SHIELD_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
+		//calculate how many forced modifiers there are. ALWAYS round down by truncation, we don't want partials here (since no partials of this exist in game)
+		numberOfForcedModifiers = crimeSpreeLevel / FORCED_MODIFIER_INTERVAL;
 
-	//phalanx
-	currentPhalanxHealth = (PHALANX_HEALTH * healthBoost);
-	currentPhalanxBreakpoint = (currentPhalanxHealth / PHALANX_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
-	currentPhalanxMinKillShots = (currentPhalanxBreakpoint / PHALANX_DAMAGE_CLAMP) + 1;
+		//calculate the numbers we're going to use for multiplication
+		healthBoost = 1 + (numberOfForcedModifiers * HEALTH_BOOST_MODIFIER);
+		damageBoost = 1 + (numberOfForcedModifiers * DAMAGE_BOOST_MODIFIER);
 
-	//bulldozer
-	currentBulldozerHealth = (BULLDOZER_HEALTH * healthBoost);
-	currentBulldozerBreakpoint = (currentBulldozerHealth / BULLDOZER_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
+		//calculate current health values
+		//tan
+		currentTanHealth = (TAN_HEALTH * healthBoost);
+		currentTanBreakpoint = (currentTanHealth / TAN_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
 
-	//calculate damage values
-	//R870
-	currentShotgunDamage = TAN_870_DAMAGE * damageBoost;
+		//taser
+		currentTaserHealth = (TASER_HEALTH * healthBoost);
+		currentTaserBreakpoint = (currentTaserHealth / TASER_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
 
-	//M4
-	currentRifleDamage = TAN_M4_DAMAGE * damageBoost;
+		//shield
+		currentShieldHealth = (SHIELD_HEALTH * healthBoost);
+		currentShieldBreakpoint = (currentShieldHealth / SHIELD_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
 
-	//Saiga
-	currentSaigaDamage = BULLDOZER_SAIGA_DAMAGE * damageBoost;
+		//phalanx
+		currentPhalanxHealth = (PHALANX_HEALTH * healthBoost);
+		currentPhalanxBreakpoint = (currentPhalanxHealth / PHALANX_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
+		currentPhalanxMinKillShots = (currentPhalanxBreakpoint / PHALANX_DAMAGE_CLAMP) + 1;
 
-	//M249
-	currentLMGDamage = BULLDOZER_M249_DAMAGE * damageBoost;
+		//bulldozer
+		currentBulldozerHealth = (BULLDOZER_HEALTH * healthBoost);
+		currentBulldozerBreakpoint = (currentBulldozerHealth / BULLDOZER_HEADSHOT_MULTIPLIER) / HELMET_POPPING_BONUS;
 
-	//M134 Minigun
-	currentMiniDamage = BULLDOZER_MINI_DAMAGE * damageBoost;
+		//calculate damage values
+		//R870
+		currentShotgunDamage = TAN_870_DAMAGE * damageBoost;
 
-	//PSG-1 Sniper
-	currentSniperDamage = SNIPER_DAMAGE * damageBoost;
+		//M4
+		currentRifleDamage = TAN_M4_DAMAGE * damageBoost;
 
-	//show it back to the user
-	cout << "\nResults:\n";
+		//Saiga
+		currentSaigaDamage = BULLDOZER_SAIGA_DAMAGE * damageBoost;
 
-	//health
-	cout << "\nHealth Values:\n";
-	cout << "Tan Health: " << currentTanHealth << endl;
-	cout << "Tan Breakpoint: " << currentTanBreakpoint << endl;
-	cout << "Taser Health: " << currentTaserHealth << endl;
-	cout << "Taser Breakpoint: " << currentTaserBreakpoint << endl;
-	cout << "Shield Health: " << currentShieldHealth << endl;
-	cout << "Shield Breakpoint: " << currentShieldBreakpoint << endl;
-	cout << "Phalanx Health: " << currentPhalanxHealth << endl;
-	cout << "Phalanx Breakpoint: " << currentPhalanxBreakpoint << endl;
-	cout << "Phalanx: Minimum shots to kill (without crit): " << currentPhalanxMinKillShots << endl;
-	cout << "Bulldozer Health: " << currentBulldozerHealth << endl;
-	cout << "Bulldozer Breakpoint: " << currentBulldozerBreakpoint << endl;
+		//M249
+		currentLMGDamage = BULLDOZER_M249_DAMAGE * damageBoost;
 
-	//damage
-	cout << "\nDamage Values:\n";
-	cout << "Shotgun Tan Damage: " << currentShotgunDamage << endl;
-	cout << "Rifle Tan Damage: " << currentRifleDamage << endl;
-	cout << "Saiga Bulldozer Damage: " << currentSaigaDamage << endl;
-	cout << "M249 Bulldozer Damage: " << currentLMGDamage << endl;
-	cout << "Minigun Bulldozer Damage: " << currentMiniDamage << endl;
-	cout << "Sniper Damage: " << currentSniperDamage << endl;
+		//M134 Minigun
+		currentMiniDamage = BULLDOZER_MINI_DAMAGE * damageBoost;
 
-	//buffer lines so the final line sticks out
-	cout << "\n\n";
+		//PSG-1 Sniper
+		currentSniperDamage = SNIPER_DAMAGE * damageBoost;
 
-	//we're done, close the program
-	cout << "Press Enter to close the program.";
-	cin.ignore();
+		//show it back to the user
+		cout << "\nResults:\n";
+
+		//health
+		cout << "\nHealth Values:\n";
+		cout << "Tan Health: " << currentTanHealth << endl;
+		cout << "Tan Breakpoint: " << currentTanBreakpoint << endl;
+		cout << "Taser Health: " << currentTaserHealth << endl;
+		cout << "Taser Breakpoint: " << currentTaserBreakpoint << endl;
+		cout << "Shield Health: " << currentShieldHealth << endl;
+		cout << "Shield Breakpoint: " << currentShieldBreakpoint << endl;
+		cout << "Phalanx Health: " << currentPhalanxHealth << endl;
+		cout << "Phalanx Breakpoint: " << currentPhalanxBreakpoint << endl;
+		cout << "Phalanx: Minimum shots to kill (without crit): " << currentPhalanxMinKillShots << endl;
+		cout << "Bulldozer Health: " << currentBulldozerHealth << endl;
+		cout << "Bulldozer Breakpoint: " << currentBulldozerBreakpoint << endl;
+
+		//damage
+		cout << "\nDamage Values:\n";
+		cout << "Shotgun Tan Damage: " << currentShotgunDamage << endl;
+		cout << "Rifle Tan Damage: " << currentRifleDamage << endl;
+		cout << "Saiga Bulldozer Damage: " << currentSaigaDamage << endl;
+		cout << "M249 Bulldozer Damage: " << currentLMGDamage << endl;
+		cout << "Minigun Bulldozer Damage: " << currentMiniDamage << endl;
+		cout << "Sniper Damage: " << currentSniperDamage << endl;
+
+		//buffer lines so the final line sticks out
+		cout << "\n\n";
+
+		//we're done, close the program
+		cout << "Press Enter to check another level, or N to exit.\n";
+		cin >> yesOrNo;
+
+		//if user wants to continue
+		if (yesOrNo == 'N' || yesOrNo == 'n')
+		{
+			continueProgram = false;
+		}
+
+		cin.ignore();
+
+	}
 
 
 
