@@ -3,4 +3,6 @@ This is a very (very) simple program that allows the user to input their current
 
 This would likely be used for preparing a build beforehand (as at higher levels less and less stuff becomes viable) or to judge if the current level is too much for the player to handle. 
 
+Can also show the rewards gained after beating a heist for any given Crime Spree Level. Shows EXP, Cash, Coins, Card Drops, and Cosmetics (Armor Skins).
+
 No fancy GUIs, just shows up on the command line. Should be able to run standalone just fine.
